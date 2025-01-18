@@ -5,6 +5,7 @@ import constants.Constants;
 public class CaesarCipher {
 
     public String encrypt(String text, int key) {
+        key = Math.abs(key);
         key %= Constants.englishAlphabet.size();
         StringBuilder result = new StringBuilder();
         for (char c : text.toCharArray()) {
