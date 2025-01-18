@@ -22,7 +22,7 @@ public class FileService {
         return "";
     }
 
-    public void writeFile(String filePath,String fileContent, String status){
+    private void writeFile(String filePath,String fileContent, String status){
         Path path = Paths.get(filePath);
         String fileName = path.getFileName().toString();
         String fileExtencion = "";
@@ -38,5 +38,17 @@ public class FileService {
         } catch (IOException e) {
             System.err.println("Something went wrong: " + e.getMessage());
         }
+    }
+
+    public void writeEncryptedFile(String filePath, String fileContent){
+        writeFile(filePath, fileContent, "[Encrypted]");
+    }
+
+    public void writeDecryptedFile(String filePath, String fileContent){
+        writeFile(filePath, fileContent, "[Decrypted]");
+    }
+
+    public void writeBruteForcedFile(String filePath, String fileContent, int key){
+        writeFile(filePath, fileContent, "[Brute, key - " + key +"]");
     }
 }

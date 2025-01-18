@@ -1,24 +1,30 @@
 package cipher;
 
+import Language.LanguageIdentifier;
 import constants.Constants;
+
+import java.util.ArrayList;
 
 public class CaesarCipher {
 
+    LanguageIdentifier languageIdentifier = new LanguageIdentifier();
+
     public String encrypt(String text, int key) {
+        ArrayList<Character> alphabet = languageIdentifier.identifyLanguage(text);
         key = Math.abs(key);
-        key %= Constants.englishAlphabet.size();
+        key %= alphabet.size();
         StringBuilder result = new StringBuilder();
         for (char c : text.toCharArray()) {
             char lowerChar = Character.toLowerCase(c);
 
-            int index = Constants.englishAlphabet.indexOf(lowerChar);
+            int index = alphabet.indexOf(lowerChar);
             if (index == -1) {
                 result.append(c);
                 continue;
             }
 
-            int newIndex = (index + key) % Constants.englishAlphabet.size();
-            char encryptedChar = Constants.englishAlphabet.get(newIndex);
+            int newIndex = (index + key) % alphabet.size();
+            char encryptedChar = alphabet.get(newIndex);
 
             result.append(Character.isUpperCase(c) ? Character.toUpperCase(encryptedChar) : encryptedChar);
         }
@@ -27,13 +33,14 @@ public class CaesarCipher {
     }
 
     public String decrypt(String text, int key) {
+        ArrayList<Character> alphabet = languageIdentifier.identifyLanguage(text);
         key = Math.abs(key);
-        key %= Constants.englishAlphabet.size();
+        key %= alphabet.size();
         StringBuilder result = new StringBuilder();
         for (char c : text.toCharArray()) {
             char lowerChar = Character.toLowerCase(c);
 
-            int index = Constants.englishAlphabet.indexOf(lowerChar);
+            int index = alphabet.indexOf(lowerChar);
             if (index == -1) {
                 result.append(c);
                 continue;
@@ -41,9 +48,9 @@ public class CaesarCipher {
 
             int newIndex = index - key;
             if(newIndex < 0){
-                newIndex += Constants.englishAlphabet.size();
+                newIndex += alphabet.size();
             }
-            char encryptedChar = Constants.englishAlphabet.get(newIndex);
+            char encryptedChar = alphabet.get(newIndex);
 
             result.append(Character.isUpperCase(c) ? Character.toUpperCase(encryptedChar) : encryptedChar);
         }
@@ -52,18 +59,23 @@ public class CaesarCipher {
     }
 
     public int getKeyWithBruteforce(String text){
+        ArrayList<Character> alphabet = languageIdentifier.identifyLanguage(text);
+        double[] languageFrequencies = languageIdentifier
+                                        .identifyLanguage(text)
+                                        .equals(Constants.englishAlphabet) ?
+                    Constants.englishFrequencies : Constants.ukrainianFrequencies;
         double[] charFrequencies = getCharFrequencies(text);
 
 
         int bestKey = 0;
         double minDifference = Double.MAX_VALUE;
 
-        for (int key = 0; key < Constants.englishAlphabet.size(); key++) {
+        for (int key = 0; key < alphabet.size(); key++) {
 
             double[] shiftedFrequencies = shiftFrequencies(charFrequencies, key);
 
 
-            double difference = calculateDifference(shiftedFrequencies, Constants.englishFrequencies);
+            double difference = calculateDifference(shiftedFrequencies, languageFrequencies);
 
 
             if (difference < minDifference) {
@@ -76,13 +88,14 @@ public class CaesarCipher {
     }
 
     private double[] getCharFrequencies(String text) {
-        double[] frequencies = new double[Constants.englishAlphabet.size()];
-        int[] charCounts = new int[Constants.englishAlphabet.size()];
+        ArrayList<Character> alphabet = languageIdentifier.identifyLanguage(text);
+        double[] frequencies = new double[alphabet.size()];
+        int[] charCounts = new int[alphabet.size()];
         int totalChars = 0;
 
         for (char c : text.toCharArray()) {
             char lowerChar = Character.toLowerCase(c);
-            int index = Constants.englishAlphabet.indexOf(lowerChar);
+            int index = alphabet.indexOf(lowerChar);
             if (index >= 0) {
                 charCounts[index]++;
                 totalChars++;
@@ -105,11 +118,11 @@ public class CaesarCipher {
         return shifted;
     }
 
-    private double calculateDifference(double[] frequencies1, double[] frequencies2) {
+    private double calculateDifference(double[] shiftedFrequencies, double[] normalFrequencies) {
         double difference = 0.0;
 
-        for (int i = 0; i < frequencies1.length; i++) {
-            difference += Math.abs(frequencies1[i] - frequencies2[i]);
+        for (int i = 0; i < shiftedFrequencies.length; i++) {
+            difference += Math.abs(shiftedFrequencies[i] - normalFrequencies[i]);
         }
 
         return difference;
