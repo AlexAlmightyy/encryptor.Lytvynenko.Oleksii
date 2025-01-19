@@ -7,64 +7,72 @@ import java.util.ArrayList;
 
 public class CaesarCipher {
 
-    LanguageIdentifier languageIdentifier = new LanguageIdentifier();
 
     public String encrypt(String text, int key) {
-        ArrayList<Character> alphabet = languageIdentifier.identifyLanguage(text);
         key = Math.abs(key);
-        key %= alphabet.size();
         StringBuilder result = new StringBuilder();
         for (char c : text.toCharArray()) {
-            char lowerChar = Character.toLowerCase(c);
 
-            int index = alphabet.indexOf(lowerChar);
-            if (index == -1) {
-                result.append(c);
-                continue;
-            }
-
-            int newIndex = (index + key) % alphabet.size();
-            char encryptedChar = alphabet.get(newIndex);
+            char encryptedChar = getEncryptedChar(key, c, result);
 
             result.append(Character.isUpperCase(c) ? Character.toUpperCase(encryptedChar) : encryptedChar);
         }
 
         return result.toString();
+    }
+
+    private static Character getEncryptedChar(int key, char c, StringBuilder result) {
+        ArrayList<Character> alphabet = LanguageIdentifier.identifyCharacter(c);
+        key %= alphabet.size();
+        char lowerChar = Character.toLowerCase(c);
+
+        int index = alphabet.indexOf(lowerChar);
+        if (index == -1) {
+            return c;
+        }
+
+        int newIndex = (index + key) % alphabet.size();
+        return alphabet.get(newIndex);
     }
 
     public String decrypt(String text, int key) {
-        ArrayList<Character> alphabet = languageIdentifier.identifyLanguage(text);
+
         key = Math.abs(key);
-        key %= alphabet.size();
+
         StringBuilder result = new StringBuilder();
         for (char c : text.toCharArray()) {
-            char lowerChar = Character.toLowerCase(c);
+            Character decryptedChar = getDecryptedChar(key, c, result);
+            if (decryptedChar == null) continue;
 
-            int index = alphabet.indexOf(lowerChar);
-            if (index == -1) {
-                result.append(c);
-                continue;
-            }
-
-            int newIndex = index - key;
-            if(newIndex < 0){
-                newIndex += alphabet.size();
-            }
-            char encryptedChar = alphabet.get(newIndex);
-
-            result.append(Character.isUpperCase(c) ? Character.toUpperCase(encryptedChar) : encryptedChar);
+            result.append(Character.isUpperCase(c) ? Character.toUpperCase(decryptedChar) :decryptedChar);
         }
 
         return result.toString();
     }
 
+    private static Character getDecryptedChar(int key, char c, StringBuilder result) {
+        ArrayList<Character> alphabet = LanguageIdentifier.identifyCharacter(c);
+        key %= alphabet.size();
+        char lowerChar = Character.toLowerCase(c);
+
+        int index = alphabet.indexOf(lowerChar);
+        if (index == -1) {
+            return c;
+        }
+
+        int newIndex = index - key;
+        if(newIndex < 0){
+            newIndex += alphabet.size();
+        }
+        return alphabet.get(newIndex);
+    }
+
     public int getKeyWithBruteforce(String text){
-        ArrayList<Character> alphabet = languageIdentifier.identifyLanguage(text);
-        double[] languageFrequencies = languageIdentifier
-                                        .identifyLanguage(text)
-                                        .equals(Constants.englishAlphabet) ?
-                    Constants.englishFrequencies : Constants.ukrainianFrequencies;
-        double[] charFrequencies = getCharFrequencies(text);
+        ArrayList<Character> alphabet = identifyAlphabet(text);
+        double[] languageFrequencies = alphabet.equals(Constants.englishAlphabet) ?
+                Constants.englishFrequencies : Constants.ukrainianFrequencies;
+
+        double[] charFrequencies = getCharFrequencies(text, alphabet);
 
 
         int bestKey = 0;
@@ -87,8 +95,16 @@ public class CaesarCipher {
         return bestKey;
     }
 
-    private double[] getCharFrequencies(String text) {
-        ArrayList<Character> alphabet = languageIdentifier.identifyLanguage(text);
+    private ArrayList<Character> identifyAlphabet(String text) {
+        for (char c : text.toCharArray()) {
+            if (Character.isAlphabetic(c)) {
+                return LanguageIdentifier.identifyCharacter(c);
+            }
+        }
+        return Constants.englishAlphabet;
+    }
+
+    private double[] getCharFrequencies(String text, ArrayList<Character> alphabet) {
         double[] frequencies = new double[alphabet.size()];
         int[] charCounts = new int[alphabet.size()];
         int totalChars = 0;

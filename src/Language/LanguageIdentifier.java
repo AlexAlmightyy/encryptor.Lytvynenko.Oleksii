@@ -7,8 +7,7 @@ import java.util.ArrayList;
 public class LanguageIdentifier {
 
 
-    public ArrayList<Character> identifyLanguage(String text){
-        char toIdentify = getFirstAlphabetCharacter(text);
+    public static ArrayList<Character> identifyCharacter(char toIdentify){
         if (Constants.ukrainianAlphabet.contains(Character.toLowerCase(toIdentify))) {
             return  Constants.ukrainianAlphabet;
         }else {
@@ -16,7 +15,7 @@ public class LanguageIdentifier {
         }
     }
 
-    private static Character getFirstAlphabetCharacter(String text) {
+    private static Character identifyAlphabet(String text) {
         if (text == null || text.isEmpty()) {
             return null;
         }
