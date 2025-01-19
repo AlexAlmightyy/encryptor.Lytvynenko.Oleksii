@@ -1,6 +1,6 @@
 package Language;
 
-import constants.Constants;
+import Constants.Constants;
 
 import java.util.ArrayList;
 
@@ -13,19 +13,5 @@ public class LanguageIdentifier {
         }else {
             return Constants.englishAlphabet;
         }
-    }
-
-    private static Character identifyAlphabet(String text) {
-        if (text == null || text.isEmpty()) {
-            return null;
-        }
-
-        for (char c : text.toCharArray()) {
-            if (Character.isLetter(c)) {
-                return c;
-            }
-        }
-
-        return null;
     }
 }

@@ -1,9 +1,11 @@
-package cipher;
+package Cipher;
 
 import Language.LanguageIdentifier;
-import constants.Constants;
+import Constants.Constants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CaesarCipher {
 
@@ -13,7 +15,7 @@ public class CaesarCipher {
         StringBuilder result = new StringBuilder();
         for (char c : text.toCharArray()) {
 
-            char encryptedChar = getEncryptedChar(key, c, result);
+            char encryptedChar = getEncryptedChar(key, c);
 
             result.append(Character.isUpperCase(c) ? Character.toUpperCase(encryptedChar) : encryptedChar);
         }
@@ -21,7 +23,7 @@ public class CaesarCipher {
         return result.toString();
     }
 
-    private static Character getEncryptedChar(int key, char c, StringBuilder result) {
+    private static Character getEncryptedChar(int key, char c) {
         ArrayList<Character> alphabet = LanguageIdentifier.identifyCharacter(c);
         key %= alphabet.size();
         char lowerChar = Character.toLowerCase(c);
@@ -41,7 +43,7 @@ public class CaesarCipher {
 
         StringBuilder result = new StringBuilder();
         for (char c : text.toCharArray()) {
-            Character decryptedChar = getDecryptedChar(key, c, result);
+            Character decryptedChar = getDecryptedChar(key, c);
             if (decryptedChar == null) continue;
 
             result.append(Character.isUpperCase(c) ? Character.toUpperCase(decryptedChar) :decryptedChar);
@@ -50,7 +52,7 @@ public class CaesarCipher {
         return result.toString();
     }
 
-    private static Character getDecryptedChar(int key, char c, StringBuilder result) {
+    private static Character getDecryptedChar(int key, char c) {
         ArrayList<Character> alphabet = LanguageIdentifier.identifyCharacter(c);
         key %= alphabet.size();
         char lowerChar = Character.toLowerCase(c);
@@ -67,25 +69,35 @@ public class CaesarCipher {
         return alphabet.get(newIndex);
     }
 
-    public int getKeyWithBruteforce(String text){
-        ArrayList<Character> alphabet = identifyAlphabet(text);
-        double[] languageFrequencies = alphabet.equals(Constants.englishAlphabet) ?
-                Constants.englishFrequencies : Constants.ukrainianFrequencies;
+    public int getKeyWithBruteforce(String text) {
+        Map<String, String> textParts = splitByAlphabet(text);
+        String englishText = textParts.getOrDefault("english", "");
+        String ukrainianText = textParts.getOrDefault("ukrainian", "");
 
+        int englishKey = englishText.isEmpty() ? 0 : findKeyForAlphabet(englishText, Constants.englishAlphabet, Constants.englishFrequencies);
+
+        int ukrainianKey = ukrainianText.isEmpty() ? 0 : findKeyForAlphabet(ukrainianText, Constants.ukrainianAlphabet, Constants.ukrainianFrequencies);
+
+
+        while(englishKey != ukrainianKey){
+            if(englishKey < ukrainianKey){
+                englishKey += Constants.englishAlphabet.size();
+            } else if (englishKey > ukrainianKey) {
+                ukrainianKey += Constants.ukrainianAlphabet.size();
+            }
+        }
+        return englishText.length() > ukrainianText.length() ? englishKey : ukrainianKey;
+    }
+
+    private int findKeyForAlphabet(String text, ArrayList<Character> alphabet, double[] frequencies) {
         double[] charFrequencies = getCharFrequencies(text, alphabet);
-
 
         int bestKey = 0;
         double minDifference = Double.MAX_VALUE;
 
         for (int key = 0; key < alphabet.size(); key++) {
-
             double[] shiftedFrequencies = shiftFrequencies(charFrequencies, key);
-
-
-            double difference = calculateDifference(shiftedFrequencies, languageFrequencies);
-
-
+            double difference = calculateDifference(shiftedFrequencies, frequencies);
             if (difference < minDifference) {
                 minDifference = difference;
                 bestKey = key;
@@ -95,13 +107,22 @@ public class CaesarCipher {
         return bestKey;
     }
 
-    private ArrayList<Character> identifyAlphabet(String text) {
+    private Map<String, String> splitByAlphabet(String text) {
+        StringBuilder englishPart = new StringBuilder();
+        StringBuilder ukrainianPart = new StringBuilder();
+
         for (char c : text.toCharArray()) {
-            if (Character.isAlphabetic(c)) {
-                return LanguageIdentifier.identifyCharacter(c);
+            if (Constants.englishAlphabet.contains(Character.toLowerCase(c))) {
+                englishPart.append(c);
+            } else if (Constants.ukrainianAlphabet.contains(Character.toLowerCase(c))) {
+                ukrainianPart.append(c);
             }
         }
-        return Constants.englishAlphabet;
+
+        Map<String, String> result = new HashMap<>();
+        result.put("english", englishPart.toString());
+        result.put("ukrainian", ukrainianPart.toString());
+        return result;
     }
 
     private double[] getCharFrequencies(String text, ArrayList<Character> alphabet) {

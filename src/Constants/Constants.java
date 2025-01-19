@@ -1,4 +1,4 @@
-package constants;
+package Constants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
