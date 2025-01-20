@@ -3,6 +3,9 @@ package Runner;
 import Cipher.CaesarCipher;
 import FileService.FileService;
 import UI.CLI;
+import UI.GUI;
+
+import java.util.Scanner;
 
 public class Runner{
 
@@ -25,12 +28,28 @@ public class Runner{
                     int key = caesarCipher.getKeyWithBruteforce(fileService.readFile(args[1]));
                     fileService.writeBruteForcedFile(args[1], decryptedText, key);
                     break;
+                default:
+                    System.err.println("Wrong arguments");
             }
         }else {
-            CLI cli = new CLI();
-            cli.start();
+            System.out.println("Choose interface:");
+            System.out.println("|   GUI   | Console |");
+            System.out.println("---------------------");
+            System.out.println("|    1    |    2    |\n");
+            Scanner scanner = new Scanner(System.in);
+            int userInterface = Integer.parseInt(scanner.nextLine());
 
-            //TODO GUI
+            switch (userInterface){
+                case 1:
+                    new GUI();
+                    break;
+                case 2:
+                    CLI cli = new CLI();
+                    cli.start();
+                    break;
+                default:
+                    System.out.println("Invalid number, please choose 1 or 2");
+            }
         }
     }
 
