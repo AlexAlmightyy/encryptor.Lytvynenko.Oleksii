@@ -46,7 +46,7 @@ public class CaesarCipher {
             Character decryptedChar = getDecryptedChar(key, c);
             if (decryptedChar == null) continue;
 
-            result.append(Character.isUpperCase(c) ? Character.toUpperCase(decryptedChar) :decryptedChar);
+            result.append(Character.isUpperCase(c) ? Character.toUpperCase(decryptedChar) : decryptedChar);
         }
 
         return result.toString();
@@ -63,7 +63,7 @@ public class CaesarCipher {
         }
 
         int newIndex = index - key;
-        if(newIndex < 0){
+        if (newIndex < 0) {
             newIndex += alphabet.size();
         }
         return alphabet.get(newIndex);
@@ -78,12 +78,13 @@ public class CaesarCipher {
 
         int ukrainianKey = ukrainianText.isEmpty() ? 0 : findKeyForAlphabet(ukrainianText, Constants.ukrainianAlphabet, Constants.ukrainianFrequencies);
 
-
-        while(englishKey != ukrainianKey){
-            if(englishKey < ukrainianKey){
-                englishKey += Constants.englishAlphabet.size();
-            } else if (englishKey > ukrainianKey) {
-                ukrainianKey += Constants.ukrainianAlphabet.size();
+        if (englishKey != 0 && ukrainianKey != 0) {
+            while (englishKey != ukrainianKey) {
+                if (englishKey < ukrainianKey) {
+                    englishKey += Constants.englishAlphabet.size();
+                } else if (englishKey > ukrainianKey) {
+                    ukrainianKey += Constants.ukrainianAlphabet.size();
+                }
             }
         }
         return englishText.length() > ukrainianText.length() ? englishKey : ukrainianKey;

@@ -2,6 +2,7 @@ package Runner;
 
 import Cipher.CaesarCipher;
 import FileService.FileService;
+import UI.CLI;
 
 public class Runner{
 
@@ -26,7 +27,10 @@ public class Runner{
                     break;
             }
         }else {
-            //TODO CLI and GUI
+            CLI cli = new CLI();
+            cli.start();
+
+            //TODO GUI
         }
     }
 
