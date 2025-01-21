@@ -3,6 +3,7 @@ package UI;
 import Cipher.CaesarCipher;
 import FileService.FileService;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class CLI {
@@ -14,30 +15,44 @@ public class CLI {
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Choose an action :");
-        int choosedAction = Integer.parseInt(scanner.nextLine());
+        int chosenAction = Integer.parseInt(scanner.nextLine());
         System.out.println("Enter a path to the file :");
         String filePath = scanner.nextLine();
 
         CaesarCipher caesarCipher = new CaesarCipher();
         FileService fileService = new FileService();
 
-        switch (choosedAction){
+        switch (chosenAction){
             case 1:
                 System.out.println("Enter a key :");
                 int key = scanner.nextInt();
-                fileService.writeEncryptedFile(filePath, caesarCipher.encrypt(fileService.readFile(filePath), key));
+                try {
+                    String encryptedText = caesarCipher.encrypt(fileService.readFile(filePath), key);
+                    fileService.writeEncryptedFile(filePath, encryptedText);
+                } catch (IOException e) {
+                    System.err.println("Something went wrong ! " + e.getMessage());
+                }
                 System.out.println("Successfully!");
                 break;
             case 2:
                 System.out.println("Enter a key :");
-                int key2 = scanner.nextInt();
-                fileService.writeDecryptedFile(filePath, caesarCipher.decrypt(fileService.readFile(filePath), key2));
+                int key2 = Integer.parseInt(scanner.nextLine());
+                try {
+                    String decryptedText = caesarCipher.decrypt(fileService.readFile(filePath), key2);
+                    fileService.writeDecryptedFile(filePath, decryptedText);
+                } catch (IOException e) {
+                    System.err.println("Something went wrong ! " + e.getMessage());
+                }
                 System.out.println("Successfully!");
                 break;
             case 3:
-                fileService.writeBruteForcedFile(filePath
-                        , caesarCipher.decrypt(fileService.readFile(filePath), caesarCipher.getKeyWithBruteforce(fileService.readFile(filePath)))
-                        , caesarCipher.getKeyWithBruteforce(fileService.readFile(filePath)));
+                try {
+                    int key3 = caesarCipher.getKeyWithBruteforce(fileService.readFile(filePath));
+                    String bruteText = caesarCipher.decrypt(fileService.readFile(filePath), key3);
+                    fileService.writeBruteForcedFile(filePath, bruteText, key3);
+                } catch (IOException e) {
+                    System.err.println("Something went wrong ! " + e.getMessage());
+                }
                 System.out.println("Successfully!");
                 break;
             default:

@@ -9,6 +9,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class GUI extends JFrame implements ActionListener{
     private final JButton encryptButton;
@@ -97,6 +98,8 @@ public class GUI extends JFrame implements ActionListener{
             JOptionPane.showMessageDialog(this, "Invalid key. Please enter a valid integer.", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (HeadlessException ex) {
             JOptionPane.showMessageDialog(this, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }  catch (IOException ex){
+            JOptionPane.showMessageDialog(this, "File not found ! Enter a valid path", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

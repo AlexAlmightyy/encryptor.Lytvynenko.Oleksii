@@ -9,20 +9,13 @@ import java.nio.file.Paths;
 
 public class FileService {
 
-    public String readFile(String filePath){
-        try{
+    public String readFile(String filePath) throws IOException {
+
             return Files.readString(Path.of(filePath));
-        } catch (NoSuchFileException e) {
-            System.err.println("File not found :");
-            System.err.println(e.getMessage());
-            return "";
-        } catch (IOException e) {
-            System.err.println("Something went wrong: " + e.getMessage());
-        }
-        return "";
+
     }
 
-    private void writeFile(String filePath,String fileContent, String status){
+    private void writeFile(String filePath,String fileContent, String status) throws IOException {
         Path path = Paths.get(filePath);
         String fileName = path.getFileName().toString();
         String fileExtencion = "";
@@ -33,22 +26,20 @@ public class FileService {
         }
         String newFileName = fileName + status + fileExtencion;
         Path newFilePath = path.resolveSibling(newFileName);
-        try{
+
             Files.writeString(newFilePath, fileContent);
-        } catch (IOException e) {
-            System.err.println("Something went wrong: " + e.getMessage());
-        }
+
     }
 
-    public void writeEncryptedFile(String filePath, String fileContent){
+    public void writeEncryptedFile(String filePath, String fileContent) throws IOException {
         writeFile(filePath, fileContent, "[Encrypted]");
     }
 
-    public void writeDecryptedFile(String filePath, String fileContent){
+    public void writeDecryptedFile(String filePath, String fileContent) throws IOException {
         writeFile(filePath, fileContent, "[Decrypted]");
     }
 
-    public void writeBruteForcedFile(String filePath, String fileContent, int key){
+    public void writeBruteForcedFile(String filePath, String fileContent, int key) throws IOException {
         writeFile(filePath, fileContent, "[Brute, key - " + key +"]");
     }
 }
