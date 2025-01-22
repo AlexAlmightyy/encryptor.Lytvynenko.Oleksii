@@ -22,4 +22,4 @@
 4. **Specify the Key:** Enter the key to be used for encryption or decryption.
 5. **View the Result:** The program will display the result of the encryption or decryption operation.
 
-You can also run the program using a JAR file. To do this, open a command prompt or terminal window, navigate to the directory where the JAR file is located, and run the JAR file using the command `java -jar <JAR_FILE_NAME>`, replacing `<JAR_FILE_NAME>` with the name of the JAR file.
+You can also run the program using a JAR file. To do this, open a command prompt or terminal window, navigate to the directory where the JAR file is located, and run the JAR file using the command `java -jar <JAR_FILE_NAME> <command> <file_Path> <key>`, replacing `<JAR_FILE_NAME>` with the name of the JAR file, '<command>' with one of the following commands : 'ENCRYPT', 'DECRYPT', 'BRUTEFORCE', <key> with Integer that will be used to encrypt/decrypt. 
