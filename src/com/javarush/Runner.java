@@ -1,9 +1,7 @@
-package Runner;
+package com.javarush;
 
-import Cipher.CaesarCipher;
-import FileService.FileService;
-import UI.CLI;
-import UI.GUI;
+import com.javarush.UI.CLI;
+import com.javarush.UI.GUI;
 
 import java.io.IOException;
 import java.util.Scanner;

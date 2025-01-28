@@ -1,7 +1,7 @@
-package UI;
+package com.javarush.UI;
 
-import Cipher.CaesarCipher;
-import FileService.FileService;
+import com.javarush.CaesarCipher;
+import com.javarush.FileService;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

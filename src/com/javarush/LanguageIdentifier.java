@@ -1,6 +1,4 @@
-package Language;
-
-import Constants.Constants;
+package com.javarush;
 
 import java.util.ArrayList;
 
