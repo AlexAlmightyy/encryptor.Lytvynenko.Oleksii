@@ -14,7 +14,10 @@ class Runner {
         if (args.length > 0) {
             CaesarCipher caesarCipher = new CaesarCipher();
             FileService fileService = new FileService();
-            int key = Integer.parseInt(args[2]);
+            int key = 0;
+            if (args.length > 2) {
+                key = Integer.parseInt(args[2]);
+            }
             String filePath = args[1];
             switch (args[0]) {
                 case "ENCRYPT":

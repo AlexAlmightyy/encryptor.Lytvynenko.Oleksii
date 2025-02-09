@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 public class FileService {
 
     public String readFile(String filePath) throws IOException {
-            return Files.readString(Path.of(filePath));
+        return Files.readString(Path.of(filePath));
     }
 
     private void writeFile(String filePath, String fileContent, String status) throws IOException {

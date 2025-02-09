@@ -12,9 +12,7 @@ public class CaesarCipher {
         key = Math.abs(key);
         StringBuilder result = new StringBuilder();
         for (char c : text.toCharArray()) {
-
             char encryptedChar = getEncryptedChar(key, c);
-
             result.append(Character.isUpperCase(c) ? Character.toUpperCase(encryptedChar) : encryptedChar);
         }
         return result.toString();
