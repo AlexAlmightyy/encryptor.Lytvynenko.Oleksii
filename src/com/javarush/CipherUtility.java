@@ -2,7 +2,7 @@ package com.javarush;
 
 import java.io.IOException;
 
-public class Util {
+public class CipherUtility {
 
     public static void makeDecryptionWithBruteForce(CaesarCipher caesarCipher, FileService fileService, String filePath) {
         try {

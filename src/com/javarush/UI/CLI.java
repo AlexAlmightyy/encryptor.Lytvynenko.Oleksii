@@ -3,10 +3,9 @@ package com.javarush.UI;
 import com.javarush.CaesarCipher;
 import com.javarush.FileService;
 
-import java.io.IOException;
 import java.util.Scanner;
 
-import static com.javarush.Util.*;
+import static com.javarush.CipherUtility.*;
 
 public class CLI {
 

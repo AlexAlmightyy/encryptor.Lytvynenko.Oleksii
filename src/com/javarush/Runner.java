@@ -3,10 +3,9 @@ package com.javarush;
 import com.javarush.UI.CLI;
 import com.javarush.UI.GUI;
 
-import java.io.IOException;
 import java.util.Scanner;
 
-import static com.javarush.Util.*;
+import static com.javarush.CipherUtility.*;
 
 class Runner {
 
@@ -52,7 +51,4 @@ class Runner {
             }
         }
     }
-
-
-
 }
