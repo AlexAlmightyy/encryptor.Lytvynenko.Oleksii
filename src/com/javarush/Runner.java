@@ -6,43 +6,25 @@ import com.javarush.UI.GUI;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Runner {
+import static com.javarush.Util.*;
 
-    public void run(String[] args) {
+class Runner {
+
+    void run(String[] args) {
         if (args.length > 0) {
-
             CaesarCipher caesarCipher = new CaesarCipher();
             FileService fileService = new FileService();
-
             int key = Integer.parseInt(args[2]);
             String filePath = args[1];
-
-
             switch (args[0]) {
                 case "ENCRYPT":
-                    try {
-                        String encrypted = caesarCipher.encrypt(fileService.readFile(filePath), key);
-                        fileService.writeEncryptedFile(filePath, encrypted);
-                    } catch (IOException e) {
-                        System.err.println("Something went wrong ! "+ e.getMessage());
-                    }
+                    makeEncryption(caesarCipher, fileService, filePath, key);
                     break;
                 case "DECRYPT":
-                    try {
-                        String decrypted = caesarCipher.decrypt(fileService.readFile(filePath), key);
-                        fileService.writeDecryptedFile(filePath, decrypted);
-                    } catch (IOException e) {
-                        System.err.println("Something went wrong ! " + e.getMessage());
-                    }
+                    makeDecryption(caesarCipher, fileService, filePath, key);
                     break;
                 case "BRUTEFORCE":
-                    try {
-                        int keyWithBruteforce = caesarCipher.getKeyWithBruteforce(fileService.readFile(filePath));
-                        String decryptedText = caesarCipher.decrypt(fileService.readFile(filePath), keyWithBruteforce);
-                        fileService.writeBruteForcedFile(filePath, decryptedText, keyWithBruteforce);
-                    } catch (IOException e) {
-                        System.err.println("Something went wrong ! " + e.getMessage());
-                    }
+                    makeDecryptionWithBruteForce(caesarCipher, fileService, filePath);
                     break;
                 default:
                     System.err.println("Wrong arguments");
@@ -54,7 +36,6 @@ public class Runner {
             System.out.println("|    1    |    2    |\n");
             Scanner scanner = new Scanner(System.in);
             int userInterface = Integer.parseInt(scanner.nextLine());
-
             switch (userInterface) {
                 case 1:
                     new GUI();
@@ -68,5 +49,7 @@ public class Runner {
             }
         }
     }
+
+
 
 }

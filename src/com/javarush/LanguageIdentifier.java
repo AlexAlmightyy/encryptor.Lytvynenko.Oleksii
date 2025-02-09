@@ -1,11 +1,12 @@
 package com.javarush;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class LanguageIdentifier {
+class LanguageIdentifier {
 
 
-    public static ArrayList<Character> identifyCharacter(char toIdentify){
+    static List<Character> identifyCharacter(char toIdentify){
         if (Constants.ukrainianAlphabet.contains(Character.toLowerCase(toIdentify))) {
             return  Constants.ukrainianAlphabet;
         }else {

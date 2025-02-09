@@ -9,25 +9,21 @@ import java.nio.file.Paths;
 public class FileService {
 
     public String readFile(String filePath) throws IOException {
-
             return Files.readString(Path.of(filePath));
-
     }
 
-    private void writeFile(String filePath,String fileContent, String status) throws IOException {
+    private void writeFile(String filePath, String fileContent, String status) throws IOException {
         Path path = Paths.get(filePath);
         String fileName = path.getFileName().toString();
         String fileExtencion = "";
         int extencionIndex = fileName.lastIndexOf('.');
-        if(extencionIndex > 0){
+        if(extencionIndex > 0) {
             fileExtencion = fileName.substring(extencionIndex);
             fileName = fileName.substring(0, extencionIndex);
         }
         String newFileName = fileName + status + fileExtencion;
         Path newFilePath = path.resolveSibling(newFileName);
-
-            Files.writeString(newFilePath, fileContent);
-
+        Files.writeString(newFilePath, fileContent);
     }
 
     public void writeEncryptedFile(String filePath, String fileContent) throws IOException {
